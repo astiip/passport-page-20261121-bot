@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { width:1024px; height:1024px; background:#3a1220; font-family:Georgia, 'Times New Roman', serif; }
+.spread { width:1024px; height:1024px; padding:10px; display:flex; gap:8px; }
+.page { flex:1; background:#f4efe2; background-image:repeating-linear-gradient(0deg, transparent, transparent 26px, rgba(120,90,40,.05) 27px); position:relative; padding:20px 22px; overflow:hidden; color:#241a12; }
+.page::after { content:""; position:absolute; inset:8px; border:1.5px solid rgba(107,31,42,.55); pointer-events:none; }
+.wm { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) rotate(-18deg); font-size:64px; letter-spacing:14px; color:rgba(107,31,42,.07); font-weight:bold; white-space:nowrap; }
+.num { position:absolute; top:14px; right:22px; color:#8c1f2e; font-size:13px; font-weight:bold; }
+.pno { position:absolute; bottom:12px; right:22px; color:#8c1f2e; font-size:12px; font-weight:bold; }
+.pg { position:absolute; bottom:12px; left:22px; font-size:12px; color:#6b5a44; }
+/* header */
+.emblem { width:58px; height:58px; border:2.5px solid #6b1f2a; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 6px; background:#fbf7ea; }
+.emblem svg { width:44px; height:44px; }
+h1 { text-align:center; font-size:29px; letter-spacing:3px; color:#5c1a24; font-weight:bold; }
+.sub { text-align:center; font-size:12px; letter-spacing:5px; color:#8a6d2f; margin-top:2px; }
+.sub2 { text-align:center; font-size:11px; letter-spacing:4px; color:#5c1a24; margin:6px 0 2px; }
+.rule { border-top:2px solid #5c1a24; margin:8px 0 12px; }
+/* data page */
+.datarow { display:flex; gap:14px; }
+.photo { width:148px; height:184px; border:2px solid #3a3a3a; flex:none; background:#ddd; }
+.photo img { width:100%; height:100%; object-fit:cover; display:block; }
+.fields { flex:1; }
+.lbl { font-size:8.5px; letter-spacing:1px; color:#6b5a44; font-family:Arial, sans-serif; text-transform:uppercase; }
+.val { font-size:16px; font-weight:bold; color:#1c130c; margin-bottom:7px; font-family:Georgia, serif; }
+.val.big { font-size:19px; }
+.cols { display:flex; gap:18px; }
+.cols > div { flex:1; }
+.sig { font-family:'Snell Roundhand','Segoe Script',cursive; font-style:italic; font-size:22px; color:#1a3a8c; border-bottom:1px solid #999; padding-bottom:2px; margin:2px 0 8px; }
+.obs { border:1.5px solid #5c1a24; padding:8px 10px; margin-top:10px; background:rgba(255,255,255,.35); }
+.obs .lbl { margin-bottom:3px; }
+.obs p { font-size:11.5px; line-height:1.45; }
+.ghost { position:absolute; right:26px; bottom:215px; width:82px; height:102px; opacity:.16; filter:grayscale(1); }
+.ghost img { width:100%; height:100%; object-fit:cover; }
+.mrz { position:absolute; left:22px; right:22px; bottom:30px; background:#e9e2cf; border:1px solid #b9a888; padding:8px 10px; font-family:'Courier New',monospace; font-size:13.5px; letter-spacing:1px; line-height:1.5; color:#1c130c; }
+/* right page */
+h2 { text-align:center; font-size:24px; letter-spacing:3px; color:#5c1a24; }
+h2 .r { float:right; font-size:12px; color:#6b5a44; letter-spacing:1px; margin-top:8px; }
+.box { border:2px solid #5c1a24; padding:9px 11px; margin-top:10px; background:rgba(255,255,255,.4); position:relative; }
+.box.green { border-color:#2e5e3a; }
+.box.endorse p { padding-right:100px; }
+.box h3 { font-size:13px; letter-spacing:1px; color:#5c1a24; }
+.box.green h3 { color:#2e5e3a; }
+.box p { font-size:11px; line-height:1.45; margin-top:4px; }
+.box .fee { position:absolute; right:10px; top:8px; font-size:10px; color:#8c1f2e; font-weight:bold; }
+.vgrid { display:flex; gap:8px; margin-top:5px; }
+.vgrid > div { flex:1; }
+.vgrid .lbl { font-size:8px; }
+.vgrid .val { font-size:12.5px; margin-bottom:4px; }
+.barcode { height:26px; background:repeating-linear-gradient(90deg,#111 0 2px,transparent 2px 4px,#111 4px 5px,transparent 5px 9px,#111 9px 12px,transparent 12px 14px); margin-top:6px; }
+.roundstamp { position:absolute; right:12px; top:38px; width:86px; height:86px; border:2.5px solid #8c1f2e; border-radius:50%; color:#8c1f2e; display:flex; align-items:center; justify-content:center; text-align:center; font-family:Arial,sans-serif; font-weight:bold; font-size:9.5px; line-height:1.35; transform:rotate(12deg); opacity:.85; background:rgba(255,255,255,.25); }
+.roundstamp.blue { border-color:#2c4a8c; color:#2c4a8c; transform:rotate(-10deg); }
+.stamps { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+.stamp { border:2.5px solid #6b1f2a; border-radius:6px; padding:7px 9px; text-align:center; font-family:Arial,sans-serif; min-height:92px; background:rgba(255,255,255,.3); }
+.stamp .c { font-size:11px; font-weight:bold; letter-spacing:1px; }
+.stamp .a { font-size:13px; font-weight:bold; letter-spacing:1px; margin:2px 0; }
+.stamp .d { font-size:11.5px; font-weight:bold; }
+.stamp .s { font-size:9.5px; color:#4a3a28; margin-top:2px; }
+.stamp.purple { border-color:#6a3a8c; color:#6a3a8c; }
+.stamp.green { border-color:#2e5e3a; color:#2e5e3a; }
+.stamp.blue { border-color:#2c4a8c; color:#2c4a8c; }
+.stamp.red { border-color:#8c1f2e; color:#8c1f2e; }
+.stamp.burg { border-color:#6b1f2a; color:#6b1f2a; }
+.stamp .circ { display:inline-block; border:2px solid currentColor; border-radius:50%; width:64px; height:64px; line-height:1.3; padding-top:12px; font-size:9px; font-weight:bold; }
+.foot { margin-top:12px; text-align:center; font-size:11px; font-style:italic; color:#4a3a28; line-height:1.5; }
+.foot b { letter-spacing:2px; font-style:normal; }
+</style></head><body>
+<div class="spread">
+<!-- LEFT PAGE : DATA -->
+<div class="page">
+  <div class="wm">VL 847 219</div>
+  <div class="num">VL847219</div>
+  <div class="emblem"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="20" fill="none" stroke="#6b1f2a" stroke-width="1.5"/><path d="M6 32 L16 14 L22 24 L28 10 L38 32 Z" fill="#6b1f2a"/><circle cx="33" cy="10" r="3.5" fill="#a87c2a"/></svg></div>
+  <h1>REPUBLIC OF VELLOR</h1>
+  <div class="sub">VELLORSKA REPUBLIKA</div>
+  <div class="sub2">PASSPORT &nbsp;·&nbsp; PAS &nbsp;·&nbsp; PASSPORT</div>
+  <div class="rule"></div>
+  <div class="datarow">
+    <div class="photo"><img src="holder-photo.webp" alt="holder"></div>
+    <div class="fields">
+      <div class="cols">
+        <div><div class="lbl">Type / Type</div><div class="val big">P</div></div>
+        <div><div class="lbl">Code / Code</div><div class="val big">VEL</div></div>
+        <div><div class="lbl">Passport No. / Nº Passeport</div><div class="val big" style="white-space:nowrap; font-size:16px;">VL847219</div></div>
+      </div>
+      <div class="lbl">Surname / Nom</div><div class="val big">SOLENNE</div>
+      <div class="lbl">Given names / Prénoms</div><div class="val big">MIRA</div>
+      <div class="cols">
+        <div><div class="lbl">Nationality / Nationalité</div><div class="val">VELLORAN</div></div>
+        <div><div class="lbl">Sex / Sexe</div><div class="val">F</div></div>
+      </div>
+      <div class="cols">
+        <div><div class="lbl">Date of birth / Date de naissance</div><div class="val">12 MAR 1991</div></div>
+        <div><div class="lbl">Place of birth / Lieu de naissance</div><div class="val">AERIE, HIGH VELLOR</div></div>
+      </div>
+      <div class="lbl">Personal No. / Nº Personnel</div><div class="val">910312-4721</div>
+    </div>
+  </div>
+  <div style="display:flex; gap:14px; margin-top:10px;">
+    <div style="flex:1;">
+      <div class="lbl">Holder's signature / Signature</div>
+      <div class="sig">Mira Solenne</div>
+      <div class="cols">
+        <div><div class="lbl">Date of issue / Date de délivrance</div><div class="val">04 APR 2023</div></div>
+        <div><div class="lbl">Expiry / Expiration</div><div class="val">03 APR 2033</div></div>
+      </div>
+      <div class="lbl">Authority / Autorité</div><div class="val">PASSPORT OFFICE, AERIE</div>
+    </div>
+    <div style="width:150px;"></div>
+  </div>
+  <div class="obs">
+    <div class="lbl">Observations</div>
+    <p>Holder is a licensed cloud shepherd, licence CS-2214. Pass crossings by Kestrel Cableway only, beacon hours 05:30–19:00. Fog card must be carried: see endorsement on page 3.</p>
+  </div>
+  <div class="obs" style="margin-top:8px;">
+    <div class="lbl">Kestrel Cableway — Season Pass</div>
+    <p>SEASON 2024 · CABLEWAY 1 &amp; 2 · BEACON CARD No. KC-2214 · VALID 01 APR – 31 OCT 2024 · FOG CARD ATTACHED</p>
+  </div>
+  <div class="ghost"><img src="holder-photo.webp" alt=""></div>
+  <div class="mrz">P&lt;VELSOLENNE&lt;&lt;MIRA&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>VL8472193VEL9103127F33040339103124721&lt;&lt;86</div>
+  <div class="pg">2</div>
+</div>
+<!-- RIGHT PAGE : VISAS -->
+<div class="page">
+  <div class="num">3</div>
+  <h2>VISAS · ENDORSEMENTS <span class="r">VÍSOR · ENDÓRSUR</span></h2>
+  <div class="rule"></div>
+  <div class="box endorse">
+    <h3>CLOUD SHEPHERD'S ENDORSEMENT</h3>
+    <p><b>VELLOR — ISSUED AERIE 04 APR 2023</b><br>
+    Holder is licensed to guide cloud flocks across the High Vellor passes. Crossings by Kestrel Cableway only, within beacon hours 05:30–19:00. Fog card issued with this passport must be carried.</p>
+    <div class="roundstamp">BEACON<br>TOLL<br>6 KRD<br>PAID</div>
+  </div>
+  <div class="box green">
+    <h3>KINGDOM OF NARVA</h3><span class="fee">VISA B<br>No. NV 552 910</span>
+    <p><b>VISITOR VISA · MULTIPLE ENTRY</b></p>
+    <div class="vgrid">
+      <div><div class="lbl">Valid from / Valable du</div><div class="val">01 JUN 2024</div></div>
+      <div><div class="lbl">Until / Au</div><div class="val">30 NOV 2024</div></div>
+      <div><div class="lbl">Stay / Durée</div><div class="val">30 DAYS</div></div>
+    </div>
+    <div class="vgrid">
+      <div><div class="lbl">Issued at / Délivré à</div><div class="val">NARVA CITY, 22 MAY 2024</div></div>
+      <div><div class="lbl">Fee / Frais</div><div class="val">45 NRD PAID</div></div>
+    </div>
+    <div class="barcode"></div>
+    <div style="font-size:9px; text-align:right; color:#4a3a28; margin-top:2px;">NV552910 · VL847219</div>
+  </div>
+  <div class="stamps">
+    <div class="stamp burg"><div class="c">VELLOR</div><div class="a">EXIT</div><div class="d">14 MAY 2024</div><div class="s">AERIE · CABLEWAY 2</div></div>
+    <div class="stamp purple"><div class="circ">NARVA<br>ENTRY<br>02 JUN<br>2024</div></div>
+    <div class="stamp blue"><div class="circ">NARVA<br>EXIT<br>28 JUN<br>2024</div></div>
+    <div class="stamp green"><div class="c">TALVIK</div><div class="a">ENTRY</div><div class="d">09 SEP 2024</div><div class="s">HIGH PASS 4</div></div>
+    <div class="stamp green"><div class="circ">TALVIK<br>EXIT<br>21 SEP<br>2024</div></div>
+    <div class="stamp red"><div class="c">VELLOR</div><div class="a">ENTRY</div><div class="d">03 OCT 2024</div><div class="s">AERIE · CABLEWAY 1</div></div>
+  </div>
+  <div class="foot">This passport remains the property of the Republic of Vellor.<br><b>ALTITUDE 3,412 M — AERIE</b> · crossings only when the beacon is lit</div>
+  <div class="pno">VL847219</div>
+</div>
+</div>
+</body></html>
